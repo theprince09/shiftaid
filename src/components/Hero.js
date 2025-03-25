@@ -64,7 +64,7 @@ export default function Hero() {
             <p className="mt-4 text-lg text-white max-w-2xl z-10">
                 AI-powered insights for a seamless relocation. Get housing, utilities, security, and lifestyle recommendations tailored to your needs.
             </p>
-
+            
             <div className="mt-6 w-full max-w-lg z-10">
             <input
                     type="text"

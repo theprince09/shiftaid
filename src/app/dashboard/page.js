@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Navbar from "@/components/NavbarDashboard";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -69,6 +70,9 @@ export default function Dashboard() {
     }, [typingIndex, deleting, cityIndex]);
 
     return (
+        <>
+         <Navbar />
+        
         <section 
             className="relative h-screen flex flex-col justify-center items-center text-center px-6 bg-cover bg-center"
             style={{ backgroundImage: "url('https://images.pexels.com/photos/4553182/pexels-photo-4553182.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}
@@ -105,6 +109,7 @@ export default function Dashboard() {
                 <Feature icon="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" label="Lifestyle Assistance" />
             </div>
         </section>
+        </>
     );
 }
 
@@ -120,3 +125,5 @@ function Feature({ icon, label }) {
         </div>
     );
 }
+
+
