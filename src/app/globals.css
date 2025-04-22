@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+.text-3d {
+  position: relative;
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #ffffff; /* Adjust for dark mode */
+  text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

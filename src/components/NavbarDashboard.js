@@ -1,19 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react"; // Icons for mobile menu
+import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { motion } from "framer-motion";
+
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
-  const router = useRouter(); 
+  const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const storedUser = localStorage.getItem("user");
-        
-        // Ensure storedUser is not null or "undefined" before parsing
         if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
           setUser(JSON.parse(storedUser));
         } else {
@@ -25,62 +27,110 @@ export default function Navbar() {
       }
     }
   }, []);
-  const handleLogout = () => {
-    localStorage.removeItem("user"); // Remove user data from localStorage
-    setUser(null); // Clear user state
-    router.push("/"); // Redirect to home
-  };
-
 
   return (
-    <nav className="bg-white shadow-md fixed top-0 w-full z-50">
-      <div className="max-w-7xl px-8 py-4 flex justify-start items-center space-x-150">
-        {/* Logo */}
-        <h1 className="text-3xl font-extrabold text-blue-600">ShiftAid</h1>
+    <motion.nav 
+      className="bg-white shadow-md fixed top-0 w-full z-50"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <div className="max-w-7xl px-10 py-5 flex justify-start items-center space-x-150">
+        <motion.h1 
+          className="text-3xl font-extrabold text-blue-600"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          ShiftAid
+        </motion.h1>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-10">
-          <ul className="flex space-x-25">
-            {["Home", "Features", "About", "Contact"].map((item) => (
-              <li key={item}>
-                <a href="#" className="text-gray-700 text-lg font-medium hover:text-blue-500 transition duration-300">
-                  {item}
-                </a>
-              </li>
+        <div className="hidden md:flex items-center space-x-15">
+          <ul className="flex space-x-20">
+            {["Home", "Features", "About", "Contact"].map((item, index) => (
+              <motion.li 
+                key={item}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.2, duration: 0.5 }}
+              >
+                <Link href={item === "Home" ? "/dashboard" : `/${item.toLowerCase()}`}>
+                  <span className="text-gray-700 text-lg font-medium hover:text-blue-500 transition duration-300 cursor-pointer">
+                    {item}
+                  </span>
+                </Link>
+              </motion.li>
             ))}
           </ul>
 
-          {/* Login/Signup Button */}
-          <button
-            className="bg-blue-600 rounded-[400px] text-white h-16 w-16 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300 "
-            onClick={() => router.push("/login")}// Navigate to /login
+          <div className="relative">
+            <motion.button
+              className="bg-red-600 rounded-full text-white h-8 w-8 text-lg font-semibold hover:bg-blue-700 transition duration-300 ml-15"
+              onClick={() => setIsOpen(!isOpen)}
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1, duration: 0.4 }}
             >
-            Login
-          </button>
+              S
+            </motion.button>
+            {isOpen && (
+              <motion.div
+                className="absolute left-0 mt-2 w-40 bg-black border border-teal-300 shadow-lg rounded-lg"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {[
+                  "My Profile", "Saved Places", "Booked History",
+                  "Switch Account", "Log Out"
+                ].map((option, idx) => (
+                  <button 
+                    key={option}
+                    className="block w-full px-4 py-2 text-left text-white hover:bg-gray-700"
+                    onClick={() => option === "Switch Account" ? router.push("/login") : option === "Log Out" ? router.push("/") : null}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-gray-700"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="md:hidden text-gray-700" onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={28} /> : <Menu size={28} />}
         </button>
       </div>
 
-      {/* Mobile Dropdown Menu */}
       {menuOpen && (
-        <div className="md:hidden bg-white shadow-md flex flex-col items-start p-4 space-y-4">
-          {["Home", "Features", "About", "Contact"].map((item) => (
-            <a key={item} href="#" className="text-gray-700 text-lg font-medium hover:text-blue-500 transition duration-300">
+        <motion.div
+          className="md:hidden bg-white shadow-md flex flex-col items-start p-4 space-y-4"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          {["Home", "Features", "About", "Contact"].map((item, index) => (
+            <motion.a 
+              key={item} 
+              href="#" 
+              className="text-gray-700 text-lg font-medium hover:text-blue-500 transition duration-300"
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
+            >
               {item}
-            </a>
+            </motion.a>
           ))}
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">
+          <motion.button 
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 0.4 }}
+          >
             Login / Signup
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       )}
-    </nav>
+    </motion.nav>
   );
 }
